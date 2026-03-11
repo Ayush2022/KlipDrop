@@ -19,7 +19,7 @@ button{
 }
 .footer{
     position: fixed;
-    bottom: 40px;
+    bottom: 5px;
     left: 50%;
     transform: translateX(-50%);
     color: #9ca3af;
