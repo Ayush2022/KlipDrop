@@ -54,48 +54,55 @@ async function getText(){
 
     const code = document.getElementById("code").value;
 
-    const res = await fetch(API_URL + "/get/" + code);
+    // 🔐 password (optional)
+    let password = "";
+    const passInput = document.getElementById("passwordInput");
+    if(passInput){
+        password = passInput.value;
+    }
+
+    // ✅ fetch data properly
+    const res = await fetch(API_URL + "/get/" + code + "?password=" + password);
 
     const data = await res.json();
 
-    // ⏳ Expiry timer
-const expiryTime = new Date(data.createdAt).getTime() + 600000;
-
-setInterval(() => {
-
-    const now = new Date().getTime();
-    const diff = expiryTime - now;
-
-    if(diff <= 0){
-        document.getElementById("timer").innerText = "Expired";
+    // ❌ error handling
+    if(data.message){
+        alert(data.message);
         return;
     }
 
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
+    // ⏳ Expiry timer
+    const expiryTime = new Date(data.createdAt).getTime() + 600000;
 
-    document.getElementById("timer").innerText =
-    `Expires in ${minutes}:${seconds}`;
+    setInterval(() => {
 
-}, 1000);
+        const now = new Date().getTime();
+        const diff = expiryTime - now;
 
+        if(diff <= 0){
+            document.getElementById("timer").innerText = "Expired";
+            return;
+        }
+
+        const minutes = Math.floor(diff / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+
+        document.getElementById("timer").innerText =
+        `Expires in ${minutes}:${seconds}`;
+
+    }, 1000);
+
+    // 🔥 FILE vs TEXT
     if(data.text.includes("/uploads/")){
 
-    const url = API_URL + data.text;
+        window.open(API_URL + data.text);
 
-    if(url.match(/\.(jpeg|jpg|png|gif)$/)){
-        document.getElementById("output").outerHTML =
-        `<img src="${url}" class="mt-4 rounded-lg">`;
-    }
-    else if(url.match(/\.pdf$/)){
-        document.getElementById("output").outerHTML =
-        `<iframe src="${url}" class="w-full h-96 mt-4"></iframe>`;
-    }
-    else{
-        window.open(url);
-    }
+    } else {
 
-}
+        document.getElementById("output").value = data.text;
+
+    }
 
 }
 
