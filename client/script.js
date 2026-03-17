@@ -58,9 +58,61 @@ async function getText(){
 
     const data = await res.json();
 
-    document.getElementById("output").value = data.text;
+    // ⏳ Expiry timer
+const expiryTime = new Date(data.createdAt).getTime() + 600000;
+
+setInterval(() => {
+
+    const now = new Date().getTime();
+    const diff = expiryTime - now;
+
+    if(diff <= 0){
+        document.getElementById("timer").innerText = "Expired";
+        return;
+    }
+
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById("timer").innerText =
+    `Expires in ${minutes}:${seconds}`;
+
+}, 1000);
+
+    if(data.text.includes("/uploads/")){
+
+    const url = API_URL + data.text;
+
+    if(url.match(/\.(jpeg|jpg|png|gif)$/)){
+        document.getElementById("output").outerHTML =
+        `<img src="${url}" class="mt-4 rounded-lg">`;
+    }
+    else if(url.match(/\.pdf$/)){
+        document.getElementById("output").outerHTML =
+        `<iframe src="${url}" class="w-full h-96 mt-4"></iframe>`;
+    }
+    else{
+        window.open(url);
+    }
 
 }
+
+}
+
+const dropArea = document.getElementById("dropArea");
+
+dropArea.addEventListener("click", () => {
+    document.getElementById("fileInput").click();
+});
+
+dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+});
+
+dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    document.getElementById("fileInput").files = e.dataTransfer.files;
+});
 
 function copyText(){
 
@@ -97,6 +149,52 @@ window.onload = function(){
     }
 
 };
+
+async function uploadFile(){
+
+    const file = document.getElementById("fileInput").files[0];
+
+    if(!file){
+        alert("Select a file first!");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    formData.append("password", document.getElementById("password").value);
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("POST", API_URL + "/upload", true);
+
+    // progress bar
+    xhr.upload.onprogress = function(e){
+        if(e.lengthComputable){
+            const percent = Math.round((e.loaded / e.total) * 100);
+
+            document.getElementById("progressBar").style.width = percent + "%";
+            document.getElementById("progressText").innerText = percent + "% uploading...";
+        }
+    };
+
+    xhr.onload = function(){
+
+        const data = JSON.parse(xhr.responseText);
+
+        const code = data.code;
+
+        const link = window.location.origin + "/get.html?code=" + code;
+
+        document.getElementById("result").innerHTML = `
+        <p class="text-green-400">File uploaded!</p>
+        <p>Code: <b>${code}</b></p>
+        <a href="${link}" class="text-blue-400">${link}</a>
+        `;
+    };
+
+    xhr.send(formData);
+}
 
 async function updateText(){
 

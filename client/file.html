@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>KlipDrop - File Share</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+
+<div class="bg-gray-800 p-8 rounded-xl shadow-xl w-full max-w-xl text-center">
+
+<h1 class="text-3xl font-bold mb-4">Share Files 📁</h1>
+
+<input type="file" id="fileInput" class="mb-4 w-full">
+<input 
+type="password" 
+id="password" 
+placeholder="Optional password"
+class="mt-2 w-full p-2 rounded bg-gray-900 border border-gray-700">
+
+<button onclick="uploadFile()"
+class="bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded-lg font-semibold w-full">
+Upload File
+</button>
+<div id="dropArea"
+class="border-2 border-dashed border-gray-600 p-6 rounded-lg text-center cursor-pointer">
+
+<p>Drag & Drop File Here or Click</p>
+
+<input type="file" id="fileInput" class="hidden">
+
+</div>
+<!-- Progress Bar -->
+<div class="mt-4 bg-gray-700 rounded-lg overflow-hidden h-4">
+<div id="progressBar" class="bg-purple-500 h-4 w-0"></div>
+</div>
+
+<p id="progressText" class="mt-2 text-gray-400"></p>
+
+<div id="result" class="mt-4"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

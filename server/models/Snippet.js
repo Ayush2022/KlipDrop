@@ -6,6 +6,8 @@ const SnippetSchema = new mongoose.Schema({
 
     text: String,
 
+    password: String,
+
     createdAt: {
         type: Date,
         default: Date.now,
