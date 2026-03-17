@@ -230,3 +230,15 @@ async function updateText(){
     alert(data.message);
 
 }
+
+window.onload = function(){
+
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if(code){
+        document.getElementById("code").value = code;
+        getText(); // 🔥 THIS LINE IS IMPORTANT
+    }
+
+};
