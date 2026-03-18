@@ -1,5 +1,16 @@
 const API_URL = "https://clipdrop-lio8.onrender.com";
 
+const fileInput = document.getElementById("fileInput");
+const fileNameText = document.getElementById("fileName");
+
+if(fileInput){
+    fileInput.addEventListener("change", () => {
+        if(fileInput.files.length > 0){
+            fileNameText.innerText = fileInput.files[0].name;
+        }
+    });
+}
+
 async function pasteText() {
 
     const text = document.getElementById("text").value;
@@ -81,29 +92,31 @@ async function getText(){
 const dropArea = document.getElementById("dropArea");
 
 if(dropArea){
+
     dropArea.addEventListener("click", () => {
-        document.getElementById("fileInput").click();
+        fileInput.click();
     });
 
     dropArea.addEventListener("dragover", (e) => {
         e.preventDefault();
+        dropArea.classList.add("border-purple-400");
+    });
+
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("border-purple-400");
     });
 
     dropArea.addEventListener("drop", (e) => {
         e.preventDefault();
-        document.getElementById("fileInput").files = e.dataTransfer.files;
+        dropArea.classList.remove("border-purple-400");
+
+        const files = e.dataTransfer.files;
+
+        if(files.length > 0){
+            fileInput.files = files;
+            fileNameText.innerText = files[0].name;
+        }
     });
-}
-function copyText(){
-
-    const text = document.getElementById("output");
-
-    text.select();
-
-    document.execCommand("copy");
-
-    alert("Text copied!");
-
 }
 
 function copyCode(code){
