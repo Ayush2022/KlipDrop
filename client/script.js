@@ -185,24 +185,26 @@ async function updateText(){
 
 }
 
-document.addEventListener("DOMContentLoaded", function(){
+(function(){
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
 
-    if(code){
+    if(!code) return;
+
+    // wait until page fully loads
+    setTimeout(() => {
 
         const input = document.getElementById("code");
 
         if(input){
             input.value = code;
 
-            // slight delay ensures everything is ready
-            setTimeout(() => {
-                getText();
-            }, 200);
+            console.log("Auto fetching:", code); // DEBUG
+
+            getText();
         }
 
-    }
+    }, 500);
 
-});
+})();
