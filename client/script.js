@@ -70,6 +70,7 @@ async function getText(){
 
     // ✅ ONLY TEXT
     document.getElementById("output").value = data.text;
+    document.getElementById("output").value = "Fetching...";
 
 }
 
@@ -184,14 +185,24 @@ async function updateText(){
 
 }
 
-window.onload = function(){
+document.addEventListener("DOMContentLoaded", function(){
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
 
     if(code){
-        document.getElementById("code").value = code;
-        getText(); // 🔥 THIS LINE IS IMPORTANT
+
+        const input = document.getElementById("code");
+
+        if(input){
+            input.value = code;
+
+            // slight delay ensures everything is ready
+            setTimeout(() => {
+                getText();
+            }, 200);
+        }
+
     }
 
-};
+});
