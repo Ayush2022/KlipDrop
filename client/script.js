@@ -1,3 +1,4 @@
+let selectedFile = null;
 const API_URL = "https://clipdrop-lio8.onrender.com";
 
 const fileInput = document.getElementById("fileInput");
@@ -6,7 +7,8 @@ const fileNameText = document.getElementById("fileName");
 if(fileInput){
     fileInput.addEventListener("change", () => {
         if(fileInput.files.length > 0){
-            fileNameText.innerText = fileInput.files[0].name;
+            selectedFile = fileInput.files[0];   // ✅ store file
+            fileNameText.innerText = selectedFile.name;
         }
     });
 }
@@ -106,17 +108,17 @@ if(dropArea){
         dropArea.classList.remove("border-purple-400");
     });
 
-    dropArea.addEventListener("drop", (e) => {
-        e.preventDefault();
-        dropArea.classList.remove("border-purple-400");
+dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropArea.classList.remove("border-purple-400");
 
-        const files = e.dataTransfer.files;
+    const files = e.dataTransfer.files;
 
-        if(files.length > 0){
-            fileInput.files = files;
-            fileNameText.innerText = files[0].name;
-        }
-    });
+    if(files.length > 0){
+        selectedFile = files[0];   // ✅ store file
+        fileNameText.innerText = selectedFile.name;
+    }
+});
 }
 
 function copyCode(code){
@@ -131,7 +133,7 @@ function copyCode(code){
 
 async function uploadFile(){
 
-    const file = document.getElementById("fileInput").files[0];
+    const file = selectedFile;
 
     if(!file){
         alert("Select a file first!");
