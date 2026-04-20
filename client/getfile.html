@@ -65,6 +65,24 @@ async function getFile(){
 
     }, 1000);
 }
+
+window.addEventListener("load", function(){
+
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if(!code) return;
+
+    const input = document.getElementById("code");
+
+    if(input){
+        input.value = code;
+
+        // auto fetch file
+        getFile();
+    }
+
+});
 </script>
 
 </body>
