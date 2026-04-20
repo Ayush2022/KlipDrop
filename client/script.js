@@ -281,21 +281,43 @@ document.addEventListener("DOMContentLoaded", function(){
     }, 500);
 
 });
+
+async function getFile(){
+
+    const code = document.getElementById("fileCode").value;
+    const password = document.getElementById("password")?.value || "";
+
+    const res = await fetch(API_URL + "/get/" + code + "?password=" + password);
+    const data = await res.json();
+
+    if(data.message){
+        alert(data.message);
+        return;
+    }
+
+    // 🔥 open file
+    window.open(API_URL + data.text);
+}
 // ✅ Auto-fill code from URL
 window.addEventListener("load", function(){
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
 
-    if(code){
-        const input = document.getElementById("code");
+    if(!code) return;
 
-        if(input){
-            input.value = code;   // ✅ fills input box
+    // 🔥 Try both inputs (text + file page)
+    const textInput = document.getElementById("code");
+    const fileInput = document.getElementById("fileCode");
 
-            // OPTIONAL: auto fetch text also
-            getText();
-        }
+    if(textInput){
+        textInput.value = code;
+        getText();   // for text page
+    }
+
+    if(fileInput){
+        fileInput.value = code;
+        getFile();   // for file page
     }
 
 });
